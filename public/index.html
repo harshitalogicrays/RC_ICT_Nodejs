@@ -74,16 +74,40 @@
 
     chatform.addEventListener("submit",(e)=>{
         e.preventDefault()
-        if(input.value!=''){
-            socket.emit("chat message",input.value)
+        if(msg.value!=''){
+            socket.emit("chat message",msg.value)
            input.value =''
         }        
     })
 
 
-    socket.on("user connected",(msg)=>{})
-    socket.on("chat message",(data)=>{})
-    socket.on("user disconnected",(msg)=>{})
+    socket.on("user connected",(msg)=>{
+       let item =  document.createElement('li')
+       item.textContent = msg
+       item.className="fst-italic"
+       messages.appendChild(item)
+    })
+
+
+    socket.on("chat message",(data)=>{
+        let item =  document.createElement('li') 
+        let container =  document.createElement('div') 
+        if(data.username == currentUser){
+            container.innerHTML= `<span>${data.message}</span>`
+        }
+        else {
+        container.innerHTML= `<span class="fw-bold">${data.username} : </span>${data.message}</span>`
+        }
+        item.appendChild(container)
+        messages.appendChild(item)
+    })
+
+    socket.on("user disconnected",(msg)=>{
+        let item =  document.createElement('li')
+       item.textContent = msg
+       item.className="fst-italic text-danger"
+       messages.appendChild(item)
+    })
 
 </script>
 </body>

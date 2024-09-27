@@ -27,3 +27,6 @@ let fun = ()=>{}
 fun()
 
 listen( para, ()=>{}) - callback function 
+
+
+ul = li ===> div
