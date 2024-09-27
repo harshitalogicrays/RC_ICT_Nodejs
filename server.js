@@ -11,20 +11,24 @@ app.use(express.static(path.join(__dirname,'public')))
 let io = new Server(server)
 io.on("connection",(socket)=>{
     console.log("user created")
-    io.on("set username",(username)=>{
+    socket.on("set username",(username)=>{
         if(username){
             socket.username = username
+            io.emit("user connected",`${username} has joined the chat`)
         }
     })
 
-    io.on("chat message",(message)=>{
+    socket.on("chat message",(message)=>{
         if(socket.username){
+            io.emit("chat message",{username:socket.username,message:message})
         }
         else console.log("user is not set")
     })
 
-    io.on("disconnect",()=>{
-        console.log("user disconnected")
+    socket.on("disconnect",()=>{
+        if(socket.username){
+            io.emit("user disconnected",`${socket.username} has left the chat`)
+        }
     })
 })
 

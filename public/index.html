@@ -32,7 +32,7 @@
         <div class="card-body">
             <form id="userform">
                 <div class="input-group">
-                    <input type="text" placeholder="enter username" class="form-control">
+                    <input type="text" placeholder="enter username" class="form-control" id="username">
                     <button type="submit" class="btn btn-info">set Username</button>
                </div>
             </form>
@@ -43,12 +43,48 @@
         <ul id="messages"></ul>
         <form id="chatform">
             <div class="input-group">
-                <input type="text"  class="form-control">
+                <input type="text"  class="form-control" id="msg">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i></button>
            </div>
         </form>
     </div>
 
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+    let userForm = document.getElementById("userform")
+    let userFormBox =  document.getElementById("usernamebox")
+    let username  =  document.getElementById("username")
+    let chatBox  =  document.getElementById("chatbox")
+    let messages =  document.getElementById("messages")
+    let chatform = document.getElementById("chatform")
+    let msg =  document.getElementById("msg")
+    let currentUser
+    userForm.addEventListener("submit",(e)=>{
+        e.preventDefault()
+        if(username.value!=''){
+            currentUser = username.value
+            socket.emit("set username",username.value)
+            userFormBox.remove()
+            chatBox.style.display="block"
+        }        
+    })
+
+    chatform.addEventListener("submit",(e)=>{
+        e.preventDefault()
+        if(input.value!=''){
+            socket.emit("chat message",input.value)
+           input.value =''
+        }        
+    })
+
+
+    socket.on("user connected",(msg)=>{})
+    socket.on("chat message",(data)=>{})
+    socket.on("user disconnected",(msg)=>{})
+
+</script>
 </body>
 </html>
